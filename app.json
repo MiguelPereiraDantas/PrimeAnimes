@@ -1,0 +1,36 @@
+{
+    "expo": {
+      "name": "Animes Mobile",
+      "slug": "AnimesMobile",
+      "version": "1.0.1",
+      "orientation": "portrait",
+      "icon": "./assets/icon.png",
+      "splash": {
+        "image": "./assets/splash.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#121212"
+      },
+      "updates": {
+        "fallbackToCacheTimeout": 0
+      },
+      "assetBundlePatterns": [
+        "**/*"
+      ],
+      "ios": {
+        "supportsTablet": true,
+        "bundleIdentifier": "com.ncoding.animesmobile",
+        "buildNumber": "1.0.1"
+      },
+      "android": {
+        "adaptiveIcon": {
+          "foregroundImage": "./assets/adaptive-icon.png",
+          "backgroundColor": "#121212"
+        },
+        "package": "com.ncoding.animesmobile",
+        "versionCode": 1
+      },
+      "androidNavigationBar": {
+        "backgroundColor": "#121212"
+      }
+    }
+  }
