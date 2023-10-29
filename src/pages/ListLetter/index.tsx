@@ -1,0 +1,84 @@
+import React, { useEffect, useCallback, useLayoutEffect, useState, useRef } from 'react';
+import { View, ActivityIndicator } from 'react-native';
+import { useRoute, useNavigation } from '@react-navigation/native';
+import api from '../../services/api';
+
+import {
+  Wrapper,
+  Container,
+  LatestList,
+  LatestItem,
+  LatestItemTitle,
+  LatestItemImage,
+} from './styles';
+
+interface RouteParams {
+    letter: string;
+}
+
+interface Anime {
+    id: string,
+    category_name: string,
+    category_image: string,
+}
+
+const ListLetter: React.FC = () => {
+    const [animes, setAnimes] = useState<Anime[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [count, setCount] = useState(0);
+    const route = useRoute();
+    const routeParams = route.params as RouteParams;
+    const navigation = useNavigation();
+
+    useEffect(() => {
+      setLoading(true);
+      async function loadDetail(): Promise<void> {
+        await api.get('/meuanimetv-40.php', {
+        params: {
+          letra: routeParams.letter
+        }
+        }).then(response => {
+          console.log(response.data);
+          setAnimes(response.data);
+          setLoading(false);
+        });
+      }
+
+      loadDetail();
+    }, [routeParams]);
+
+    useLayoutEffect(() => {
+      navigation.setOptions({
+        title: `Letra: ${(routeParams.letter ? routeParams.letter : "")}`
+      })
+    }, [navigation, routeParams]);
+
+    const navigateToAnimeDetail = useCallback((id) => {
+      navigation.navigate('AnimeDetail', { id });
+    }, [navigation]);
+    
+    if (loading) {
+      return(
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#000000'}}>
+          <ActivityIndicator size="large" color="#e2e2e2" />
+        </View>
+      );
+    }
+
+    return (
+        <Wrapper>
+        <Container>
+          <LatestList>
+            {animes.map((item) => (
+              <LatestItem key={item.id} onPress={() => {navigateToAnimeDetail(item.id)}}>
+                <LatestItemImage source={{ uri: `http://cdn.appanimeplus.tk/img/${item.category_image}`, width: 135, height: 189 }} />
+                <LatestItemTitle>{ ((item.category_name).length > 35) ? (((item.category_name).substring(0, 35-3)) + '...') : item.category_name }</LatestItemTitle>
+              </LatestItem>
+            ))}
+          </LatestList>
+        </Container>
+        </Wrapper>
+    );
+}
+
+export default ListLetter;
